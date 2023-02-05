@@ -31,11 +31,9 @@ resource sqlDb 'Microsoft.Sql/servers/databases@2021-11-01' = {
   properties: {
     catalogCollation: 'SQL_Latin1_General_CP1_CI_AS'
     collation: 'SQL_Latin1_General_CP1_CI_AS'
-    zoneRedundant: false
     readScale: 'Disabled'
     requestedBackupStorageRedundancy: 'Local'
-    isLedgerOn: false
-    maxSizeBytes: 10737418240
+    zoneRedundant: false
   }
 
   resource auditSettings 'auditingSettings@2021-11-01' = {

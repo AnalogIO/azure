@@ -53,7 +53,7 @@ resource shiftplanningApiRg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
 }
 
 module shiftplanningApiwebapp 'apps/shiftplanningApi.bicep' = {
-  name: '${deployment().name}-app-core'
+  name: '${deployment().name}-app-shiftapi'
   scope: shiftplanningApiRg
   params: {
     location: location
