@@ -4,6 +4,7 @@ targetScope = 'subscription'
 param environment string
 
 var location = 'West Europe'
+
 var organizationPrefix = 'aio'
 var sharedResourcesAbbreviation = 'shr'
 var webAppResourcesAbbreviation = 'app'
@@ -37,6 +38,7 @@ module corewebapp 'apps/core.bicep' = {
     organizationPrefix: organizationPrefix
     applicationPrefix: 'core'
     environment: environment
+    sharedResourceGroupName: sharedRg.name
     appservicePlanName: sharedResources.outputs.appServicePlanName
     applicationInsightsName: sharedResources.outputs.applicationInsightsName
     logAnalyticsWorkspaceName: sharedResources.outputs.logAnalyticsWorkspaceName
@@ -58,6 +60,7 @@ module shiftplanningApiwebapp 'apps/shiftplanningApi.bicep' = {
     organizationPrefix: organizationPrefix
     applicationPrefix: 'shiftapi'
     environment: environment
+    sharedResourceGroupName: sharedRg.name
     appservicePlanName: sharedResources.outputs.appServicePlanName
     applicationInsightsName: sharedResources.outputs.applicationInsightsName
     logAnalyticsWorkspaceName: sharedResources.outputs.logAnalyticsWorkspaceName
@@ -79,6 +82,7 @@ module shiftywebapp 'apps/shifty.bicep' = {
     organizationPrefix: organizationPrefix
     applicationPrefix: 'shifty'
     environment: environment
+    sharedResourceGroupName: sharedRg.name
     appservicePlanName: sharedResources.outputs.appServicePlanName
     applicationInsightsName: sharedResources.outputs.applicationInsightsName
     logAnalyticsWorkspaceName: sharedResources.outputs.logAnalyticsWorkspaceName

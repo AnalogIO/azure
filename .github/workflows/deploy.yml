@@ -6,6 +6,7 @@ on:
 
 jobs:
   build:
+    name: Build ARM template
     uses: ./.github/workflows/build.yml
 
   deploy:
@@ -32,6 +33,5 @@ jobs:
           region: 'West Europe'
           template: azuredeploy.json
           parameters: "environment=dev"
-          deploymentMode: Complete
           deploymentName: 'azuredeploy-${{github.run_number}}'
           failOnStdErr: false
