@@ -28,6 +28,9 @@ resource certificate 'Microsoft.Web/certificates@2022-03-01' = {
     serverFarmId: appservicePlan.id
     canonicalName: fqdn
   }
+  dependsOn: [
+    customDomain
+  ]
 }
 
 resource customDomain 'Microsoft.web/sites/hostnameBindings@2019-08-01' = {
@@ -38,6 +41,6 @@ resource customDomain 'Microsoft.web/sites/hostnameBindings@2019-08-01' = {
     hostNameType: 'Verified'
     customHostNameDnsRecordType: 'CName'
     sslState: sslState
-    thumbprint: sslState == 'SniEnabled' ? certificate.properties.thumbprint : null
+    // thumbprint: sslState == 'SniEnabled' ? certificate.properties.thumbprint : null
   }
 }
