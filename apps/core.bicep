@@ -71,15 +71,15 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
     keyVaultReferenceIdentity: 'SystemAssigned'
   }
 
-  resource customDomain 'hostNameBindings@2022-03-01' = {
-    name: fqdn
-    properties: {
-      siteName: webapp.name
-      hostNameType: 'Verified'
-      // sslState is enabled in the webapp managed certificate module deployment
-      sslState: 'Disabled'
-    }
-  }
+  // resource customDomain 'hostNameBindings@2022-03-01' = {
+  //   name: fqdn
+  //   properties: {
+  //     siteName: webapp.name
+  //     hostNameType: 'Verified'
+  //     // sslState is enabled in the webapp managed certificate module deployment
+  //     sslState: 'Disabled'
+  //   }
+  // }
 }
 
 module sqlDb '../modules/sqldatabase.bicep' = {
@@ -103,6 +103,7 @@ module webappManagedCertificate '../modules/webappManagedCertificate.bicep' = {
     location: location
     appservicePlanName: appservicePlan.name
     webAppName: webapp.name
+    sslState: 'Disabled'
     fqdn: fqdn
   }
 }
