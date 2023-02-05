@@ -62,7 +62,7 @@ resource sqlDb 'Microsoft.Sql/servers/databases@2021-11-01' = {
 }
 
 resource diagnosticSettingsSqldb 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'Diagnostic Settings'
+  name: 'Audit Logs'
   scope: sqlDb
   properties: {
     workspaceId: logAnalyticsWorkspace.id

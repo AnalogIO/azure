@@ -33,7 +33,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
 }
 
 resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'Audit'
+  name: 'Audit Logs'
   scope: keyVault
   properties: {
     workspaceId: logAnalyticsWorkspace.id

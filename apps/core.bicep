@@ -12,6 +12,8 @@ param applicationInsightsName string
 param logAnalyticsWorkspaceName string
 param sqlServerName string
 
+param enableCustomDomain bool = false
+
 var fqdn = '${webapp.name}.analogio.dk'
 
 resource appservicePlan 'Microsoft.Web/serverfarms@2022-03-01' existing = {
@@ -70,16 +72,6 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
     redundancyMode: 'None'
     keyVaultReferenceIdentity: 'SystemAssigned'
   }
-
-  // resource customDomain 'hostNameBindings@2022-03-01' = {
-  //   name: fqdn
-  //   properties: {
-  //     siteName: webapp.name
-  //     hostNameType: 'Verified'
-  //     // sslState is enabled in the webapp managed certificate module deployment
-  //     sslState: 'Disabled'
-  //   }
-  // }
 }
 
 module sqlDb '../modules/sqldatabase.bicep' = {
@@ -97,7 +89,7 @@ module sqlDb '../modules/sqldatabase.bicep' = {
   }
 }
 
-module webappManagedCertificate '../modules/webappManagedCertificate.bicep' = {
+module webappManagedCertificate '../modules/webappManagedCertificate.bicep' = if(enableCustomDomain) {
   name: '${deployment().name}-${applicationPrefix}-ssl-${fqdn}'
   params: {
     location: location
@@ -136,7 +128,7 @@ module webappKeyvaultRoleAssignment '../modules/keyvaultRoleassignment.bicep' = 
 }
 
 resource diagnosticSettingsWebApp 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'Diagnostic Settings'
+  name: 'App Service Logs'
   scope: webapp
   properties: {
     workspaceId: logAnalyticsWorkspace.id

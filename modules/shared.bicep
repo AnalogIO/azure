@@ -71,7 +71,7 @@ resource sqlServer 'Microsoft.Sql/servers@2021-11-01' = {
     }
   }
 
-  resource symbolicname 'securityAlertPolicies@2021-11-01' = {
+  resource securityAlerts 'securityAlertPolicies@2021-11-01' = {
     name: 'default'
     properties: {
       emailAccountAdmins: true
@@ -80,6 +80,24 @@ resource sqlServer 'Microsoft.Sql/servers@2021-11-01' = {
       ]
       state: 'Enabled'
     }
+  }
+}
+
+resource diagnosticSettingsSqlServer 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'Audit Logs'
+  scope: sqlServer
+  properties: {
+    workspaceId: insightsModule.outputs.logAnalyticsWorkspaceId
+    logs: [
+      {
+        category: 'SQLSecurityAuditEvents'
+        enabled: true
+      }
+      {
+        category: 'DevOpsOperationsAudit'
+        enabled: true
+      }
+    ]
   }
 }
 
