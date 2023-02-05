@@ -1,32 +1,46 @@
-@description('Specifies the name of the key vault.')
-param keyVaultName string
-
-@description('Specifies the Azure location where the key vault should be created.')
 param location string = resourceGroup().location
 
-@description('Specifies the Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. Get it by using Get-AzSubscription cmdlet.')
-param tenantId string = subscription().tenantId
+param organizationPrefix string
+param applicationPrefix string
+param environment string
 
-@description('Specifies whether the key vault is a standard vault or a premium vault.')
-@allowed([
-  'standard'
-  'premium'
-])
-param skuName string = 'standard'
+param logAnalyticsWorkspaceName string
+
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
+  name: logAnalyticsWorkspaceName
+}
 
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
-  name: keyVaultName
+  name: 'kv-${organizationPrefix}-${applicationPrefix}-${environment}'
   location: location
   properties: {
     enableRbacAuthorization: true
-    tenantId: tenantId
+    tenantId: tenant().tenantId
     sku: {
-      name: skuName
+      name: 'standard'
       family: 'A'
     }
     networkAcls: {
       defaultAction: 'Allow'
       bypass: 'AzureServices'
     }
+    enableSoftDelete: true
+    enablePurgeProtection: true
   }
 }
+
+resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'Audit'
+  scope: keyVault
+  properties: {
+    workspaceId: logAnalyticsWorkspace.id
+    logs: [
+      {
+        category: 'AuditEvent'
+        enabled: true
+      }
+    ]
+  }
+}
+
+output keyvaultName string = keyVault.name

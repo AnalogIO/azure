@@ -10,7 +10,6 @@ param sharedResourceGroupName string
 param appservicePlanName string
 param applicationInsightsName string
 param logAnalyticsWorkspaceName string
-param keyvaultName string
 param sqlServerName string
 
 var fqdn = '${webapp.name}.analogio.dk'
@@ -108,9 +107,14 @@ module webappManagedCertificate '../modules/webappManagedCertificate.bicep' = {
   }
 }
 
-resource keyvault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
-  name: keyvaultName
-  scope: resourceGroup(sharedResourceGroupName)
+module keyvault '../modules/keyVault.bicep' = {
+  name: '${deployment().name}-${applicationPrefix}-kv'
+  params: {
+    organizationPrefix: organizationPrefix
+    applicationPrefix: applicationPrefix
+    environment: environment
+    logAnalyticsWorkspaceName: logAnalyticsWorkspace.name
+  }
 }
 
 @description('Built-in Key Vault Secrets User role. See https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#key-vault-secrets-user')
@@ -122,7 +126,7 @@ resource keyvaultSecretUserRole 'Microsoft.Authorization/roleDefinitions@2022-04
 module webappKeyvaultRoleAssignment '../modules/keyvaultRoleassignment.bicep' = {
   name: '${deployment().name}-${applicationPrefix}-rbac-kvwebapp'
   params: {
-    keyvaultName: keyvault.name
+    keyvaultName: keyvault.outputs.keyvaultName
     roleDefinitionId: keyvaultSecretUserRole.id
     principalId: webapp.identity.principalId
   }

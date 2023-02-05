@@ -42,7 +42,6 @@ module corewebapp 'apps/core.bicep' = {
     appservicePlanName: sharedResources.outputs.appServicePlanName
     applicationInsightsName: sharedResources.outputs.applicationInsightsName
     logAnalyticsWorkspaceName: sharedResources.outputs.logAnalyticsWorkspaceName
-    keyvaultName: sharedResources.outputs.keyvaultName
     sqlServerName: sharedResources.outputs.sqlServerName
   }
 }
@@ -64,7 +63,6 @@ module shiftplanningApiwebapp 'apps/shiftplanningApi.bicep' = {
     appservicePlanName: sharedResources.outputs.appServicePlanName
     applicationInsightsName: sharedResources.outputs.applicationInsightsName
     logAnalyticsWorkspaceName: sharedResources.outputs.logAnalyticsWorkspaceName
-    keyvaultName: sharedResources.outputs.keyvaultName
     sqlServerName: sharedResources.outputs.sqlServerName
   }
 }

@@ -32,25 +32,6 @@ module insightsModule 'insights.bicep' = {
   }
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
-  name: 'kv-${organizationPrefix}-${sharedResourcesAbbreviation}-${environment}'
-  location: location
-  properties: {
-    enableRbacAuthorization: true
-    tenantId: tenant().tenantId
-    sku: {
-      name: 'standard'
-      family: 'A'
-    }
-    networkAcls: {
-      defaultAction: 'Allow'
-      bypass: 'AzureServices'
-    }
-    enableSoftDelete: true
-    enablePurgeProtection: true
-  }
-}
-
 resource sqlServer 'Microsoft.Sql/servers@2021-11-01' = {
   name: 'sql-${organizationPrefix}-${sharedResourcesAbbreviation}-${environment}'
   location: location
@@ -105,5 +86,4 @@ resource sqlServer 'Microsoft.Sql/servers@2021-11-01' = {
 output appServicePlanName string = appservicePlan.name
 output logAnalyticsWorkspaceName string = insightsModule.outputs.logAnalyticsWorkspaceName
 output applicationInsightsName string = insightsModule.outputs.applicationInsightsName
-output keyvaultName string = keyVault.name
 output sqlServerName string = sqlServer.name
