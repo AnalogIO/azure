@@ -88,6 +88,7 @@ module webappManagedCertificate '../modules/webappManagedCertificate.bicep' = {
     location: location
     appservicePlanName: appservicePlan.name
     webAppName: webapp.name
+    sslState: 'Disabled'
     fqdn: fqdn
   }
 }
