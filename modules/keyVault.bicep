@@ -4,10 +4,13 @@ param organizationPrefix string
 param applicationPrefix string
 param environment string
 
+param sharedResourceGroupName string
+
 param logAnalyticsWorkspaceName string
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
   name: logAnalyticsWorkspaceName
+  scope: resourceGroup(sharedResourceGroupName)
 }
 
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {

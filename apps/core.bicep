@@ -113,6 +113,7 @@ module keyvault '../modules/keyVault.bicep' = {
     organizationPrefix: organizationPrefix
     applicationPrefix: applicationPrefix
     environment: environment
+    sharedResourceGroupName: sharedResourceGroupName
     logAnalyticsWorkspaceName: logAnalyticsWorkspace.name
   }
 }
