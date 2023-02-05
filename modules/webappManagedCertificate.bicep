@@ -8,11 +8,13 @@ param webAppName string
   'Disabled'
 ])
 param sslState string
-
 param fqdn string
+
+param sharedResourceGroupName string
 
 resource appservicePlan 'Microsoft.Web/serverfarms@2022-03-01' existing = {
   name: appservicePlanName
+  scope: resourceGroup(sharedResourceGroupName)
 }
 
 resource webapp 'Microsoft.Web/sites@2022-03-01' existing = {

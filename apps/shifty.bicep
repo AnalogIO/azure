@@ -127,5 +127,6 @@ module webappManagedCertificate '../modules/webappManagedCertificate.bicep' = {
     webAppName: webapp.name
     sslState: 'Disabled'
     fqdn: fqdn
+    sharedResourceGroupName: sharedResourceGroupName
   }
 }
