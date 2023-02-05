@@ -83,9 +83,8 @@ resource sqlServer 'Microsoft.Sql/servers@2021-11-01' = {
   }
 }
 
-resource diagnosticSettingsSqlServer 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'Audit Logs'
-  scope: sqlServer
+resource sqlServerDiagnosticSettings 'Microsoft.Sql/servers/databases/providers/diagnosticSettings@2021-05-01-preview' = {
+  name: '${sqlServer.name}/master/microsoft.insights/LogAnalytics'
   properties: {
     workspaceId: insightsModule.outputs.logAnalyticsWorkspaceId
     logs: [
