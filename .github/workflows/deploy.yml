@@ -6,6 +6,7 @@ on:
 
 jobs:
   build:
+    name: Build ARM template
     uses: ./.github/workflows/build.yml
 
   deploy:
@@ -19,17 +20,18 @@ jobs:
         with:
           name: arm
 
-      - uses: azure/login@v1
+      - name: Azure Login
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - uses: azure/arm-deploy@v1
+      - name: Deploy ARM template
+        uses: azure/arm-deploy@v1
         with:
           subscriptionId: analogio-dev
-          scope: resourcegroup
-          resourceGroupName: shared
+          scope: subscription
+          region: 'West Europe'
           template: azuredeploy.json
           parameters: "environment=dev"
-          deploymentMode: Complete
           deploymentName: 'azuredeploy-${{github.run_number}}'
           failOnStdErr: false

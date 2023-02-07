@@ -10,13 +10,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build bicep
+      - name: Build ARM template
         uses: Azure/bicep-build-action@v1.0.0
         with:
           bicepFilePath: azuredeploy.bicep
           outputFilePath: azuredeploy.json
 
-      - uses: actions/upload-artifact@v3.0.0
+      - name: Store ARM template
+        uses: actions/upload-artifact@v3.0.0
         with:
           name: arm
           path: azuredeploy.json

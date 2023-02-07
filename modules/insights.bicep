@@ -1,6 +1,5 @@
 param location string
 
-@allowed([ 'dev', 'prd' ])
 param environment string
 
 param organizationPrefix string
@@ -30,3 +29,7 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
     WorkspaceResourceId: logAnalyticsWorkspace.id
   }
 }
+
+output logAnalyticsWorkspaceName string = logAnalyticsWorkspace.name
+output logAnalyticsWorkspaceId string = logAnalyticsWorkspace.id
+output applicationInsightsName string = applicationInsights.name
