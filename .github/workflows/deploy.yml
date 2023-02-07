@@ -2,7 +2,7 @@ name: Deploy ARM template
 
 on:
   push:
-    branches: [develop, production, feature/shifty]
+    branches: [develop, production]
 
 jobs:
   build:
