@@ -33,17 +33,18 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
 resource webapp 'Microsoft.Web/sites@2022-03-01' = {
   name: 'app-${organizationPrefix}-${applicationPrefix}-${environment}'
   location: location
-  kind: 'app,linux,container'
+  kind: 'app,linux'
   properties: {
     enabled: true
     serverFarmId: appservicePlan.id
     reserved: true
     siteConfig: {
       numberOfWorkers: 1
-      linuxFxVersion: 'DOCKER|shifty'
       alwaysOn: false
+      linuxFxVersion: 'DOTNETCORE|6.0'
       http20Enabled: true
       ftpsState: 'Disabled'
+      minTlsVersion: '1.2'
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
@@ -66,17 +67,6 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
     httpsOnly: true
     redundancyMode: 'None'
     keyVaultReferenceIdentity: 'SystemAssigned'
-  }
-
-  resource config 'config@2022-03-01' = {
-    name: 'web'
-    properties: {
-      numberOfWorkers: 1
-      linuxFxVersion: 'DOCKER|shifty'
-      http20Enabled: true
-      minTlsVersion: '1.2'
-      ftpsState: 'Disabled'
-    }
   }
 }
 
