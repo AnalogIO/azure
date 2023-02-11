@@ -9,6 +9,23 @@ var organizationPrefix = 'aio'
 var sharedResourcesAbbreviation = 'shr'
 var webAppResourcesAbbreviation = 'app'
 
+var config = {
+  dev: {
+    core: {}
+    shiftapi: {}
+    shifty: {
+      customDomainName: 'dev.shifty.analogio.dk'
+    }
+  }
+  prd: {
+    core: {}
+    shiftapi: {}
+    shifty: {
+      customDomainName: 'shifty.analogio.dk'
+    }
+  }
+}
+
 resource sharedRg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   name: 'rg-${organizationPrefix}-${sharedResourcesAbbreviation}-${environment}'
   location: location
@@ -83,5 +100,6 @@ module shiftywebapp 'apps/shifty.bicep' = {
     sharedResourceGroupName: sharedRg.name
     applicationInsightsName: sharedResources.outputs.applicationInsightsName
     logAnalyticsWorkspaceName: sharedResources.outputs.logAnalyticsWorkspaceName
+    customDomainFqdn: config[environment].shifty.customDomainName
   }
 }

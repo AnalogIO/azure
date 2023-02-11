@@ -10,6 +10,8 @@ param sharedResourceGroupName string
 param applicationInsightsName string
 param logAnalyticsWorkspaceName string
 
+param customDomainFqdn string = ''
+
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: applicationInsightsName
   scope: resourceGroup(sharedResourceGroupName)
@@ -34,5 +36,12 @@ resource staticwebapp 'Microsoft.Web/staticSites@2022-03-01' = {
     provider: 'GitHub'
     stagingEnvironmentPolicy: 'Disabled'
     enterpriseGradeCdnStatus: 'Disabled'
+  }
+
+  resource customDomain 'customDomains@2022-03-01' = if(!empty(customDomainFqdn)) {
+    name: customDomainFqdn
+    properties: {
+      validationMethod: 'CNAME'
+    }
   }
 }

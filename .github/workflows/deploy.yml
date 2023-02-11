@@ -5,14 +5,14 @@ on:
     branches: [develop, production]
 
 jobs:
-  build:
-    name: Build ARM template
-    uses: ./.github/workflows/build.yml
+  build_validate:
+    name: Build and validate
+    uses: ./.github/workflows/build-validate.yml
 
   deploy:
     name: Deploy ARM template
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [build_validate]
 
     steps:
       - name: Download Artifact
@@ -30,8 +30,8 @@ jobs:
         with:
           subscriptionId: analogio-dev
           scope: subscription
-          region: 'West Europe'
+          region: "West Europe"
           template: azuredeploy.json
           parameters: "environment=dev"
-          deploymentName: 'azuredeploy-${{github.run_number}}'
+          deploymentName: "azuredeploy-${{github.run_number}}"
           failOnStdErr: false
