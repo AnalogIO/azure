@@ -30,76 +30,20 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
   scope: resourceGroup(sharedResourceGroupName)
 }
 
-resource webapp 'Microsoft.Web/sites@2022-03-01' = {
-  name: 'app-${organizationPrefix}-${applicationPrefix}-${environment}'
+resource staticwebapp 'Microsoft.Web/staticSites@2022-03-01' = {
+  name: 'stapp-${organizationPrefix}-${applicationPrefix}-${environment}'
   location: location
-  kind: 'app,linux'
-  properties: {
-    enabled: true
-    serverFarmId: appservicePlan.id
-    reserved: true
-    siteConfig: {
-      numberOfWorkers: 1
-      alwaysOn: false
-      linuxFxVersion: 'DOTNETCORE|6.0'
-      http20Enabled: true
-      ftpsState: 'Disabled'
-      minTlsVersion: '1.2'
-      appSettings: [
-        {
-          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: reference(applicationInsights.id, '2015-05-01').InstrumentationKey
-        }
-        {
-          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-          value: reference(applicationInsights.id, '2015-05-01').ConnectionString
-        }
-        {
-          name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
-          value: '~3'
-        }
-        {
-          name: 'XDT_MicrosoftApplicationInsights_Mode'
-          value: 'recommended'
-        }
-      ]
-    }
-    httpsOnly: true
-    redundancyMode: 'None'
-    keyVaultReferenceIdentity: 'SystemAssigned'
-  }
-}
-
-resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'App Service Logs'
-  scope: webapp
-  properties: {
-    workspaceId: logAnalyticsWorkspace.id
-    logs: [
+  sku: {
+    capabilities: [
       {
-        category: 'AppServiceConsoleLogs'
-        enabled: true
-      }
-      {
-        category: 'AppServiceAppLogs'
-        enabled: true
-      }
-      {
-        category: 'AppServicePlatformLogs'
-        enabled: true
+        name: 'Free'
+        value: 'Free'
       }
     ]
   }
-}
-
-module webappManagedCertificate '../modules/webappManagedCertificate.bicep' = if(enableCustomDomain) {
-  name: '${deployment().name}-ssl-${fqdn}'
-  params: {
-    location: location
-    appservicePlanName: appservicePlan.name
-    webAppName: webapp.name
-    sslState: 'Disabled'
-    fqdn: fqdn
-    sharedResourceGroupName: sharedResourceGroupName
+  properties: {
+    allowConfigFileUpdates: false
+    repositoryUrl: 'https://github.com/AnalogIO/shifty-webapp'
+    stagingEnvironmentPolicy: 'Disabled'
   }
 }
