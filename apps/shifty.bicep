@@ -30,6 +30,8 @@ resource staticwebapp 'Microsoft.Web/staticSites@2022-03-01' = {
   properties: {
     allowConfigFileUpdates: false
     repositoryUrl: 'https://github.com/AnalogIO/shifty-webapp'
+    branch: 'develop'
+    provider: 'GitHub'
     stagingEnvironmentPolicy: 'Disabled'
     enterpriseGradeCdnStatus: 'Disabled'
   }
