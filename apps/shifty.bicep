@@ -7,18 +7,8 @@ param applicationPrefix string
 
 param sharedResourceGroupName string
 
-param appservicePlanName string
 param applicationInsightsName string
 param logAnalyticsWorkspaceName string
-
-param enableCustomDomain bool = false
-
-var fqdn = '${webapp.name}.analogio.dk'
-
-resource appservicePlan 'Microsoft.Web/serverfarms@2022-03-01' existing = {
-  name: appservicePlanName
-  scope: resourceGroup(sharedResourceGroupName)
-}
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: applicationInsightsName
