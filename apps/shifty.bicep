@@ -24,16 +24,13 @@ resource staticwebapp 'Microsoft.Web/staticSites@2022-03-01' = {
   name: 'stapp-${organizationPrefix}-${applicationPrefix}-${environment}'
   location: location
   sku: {
-    capabilities: [
-      {
-        name: 'Free'
-        value: 'Free'
-      }
-    ]
+    name: 'Free'
+    tier: 'Free'
   }
   properties: {
     allowConfigFileUpdates: false
     repositoryUrl: 'https://github.com/AnalogIO/shifty-webapp'
     stagingEnvironmentPolicy: 'Disabled'
+    enterpriseGradeCdnStatus: 'Disabled'
   }
 }
