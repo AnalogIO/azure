@@ -31,7 +31,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
   scope: resourceGroup(sharedResourceGroupName)
 }
 
-var keyvaultSecretURL = 'https://${keyvaultModule.outputs.keyvaultName}.vault.${az.environment().suffixes.keyvaultDns}/secrets'
+var keyvaultSecretURL = 'https://${keyvaultModule.outputs.keyvaultName}${az.environment().suffixes.keyvaultDns}/secrets'
 
 resource webapp 'Microsoft.Web/sites@2022-03-01' = {
   name: 'app-${organizationPrefix}-${applicationPrefix}-${environment}'
