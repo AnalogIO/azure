@@ -188,7 +188,7 @@ module sqlDb '../modules/sqldatabase.bicep' = {
   }
 }
 
-module webappManagedCertificate '../modules/webappManagedCertificate.bicep' = if(enableCustomDomain) {
+module webappManagedCertificate '../modules/webappManagedCertificate.bicep' = if (enableCustomDomain) {
   name: '${deployment().name}-${applicationPrefix}-ssl-${fqdn}'
   params: {
     location: location
