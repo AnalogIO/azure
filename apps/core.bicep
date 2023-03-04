@@ -73,7 +73,6 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
           name: 'XDT_MicrosoftApplicationInsights_Mode'
           value: 'recommended'
         }
-        // Imported
         {
           name: 'AllowedHosts'
           value: '*'
@@ -162,10 +161,9 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
           name: 'LoginLimiterSettings__IsEnabled'
           value: 'true'
         }
-        // Read as a keyvault reference
         {
           name: 'LoginLimiterSettings__MaximumLoginAttemptsWithinTimeOut'
-          value: '${keyvaultSecretURL}/LoginLimiterSettings__MaximumLoginAttemptsWithinTimeOut'
+          value: '5'
         }
       ]
     }
