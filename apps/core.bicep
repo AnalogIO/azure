@@ -31,6 +31,13 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
   scope: resourceGroup(sharedResourceGroupName)
 }
 
+resource keyvault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+  name: keyvaultModule.outputs.keyvaultName
+  scope: resourceGroup(sharedResourceGroupName)
+}
+
+var keyvaultSecretURL = '${reference(keyvault.id, '2022-07-01').properties.vaultUri}/secrets'
+
 resource webapp 'Microsoft.Web/sites@2022-03-01' = {
   name: 'app-${organizationPrefix}-${applicationPrefix}-${environment}'
   location: location
@@ -65,6 +72,100 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
         {
           name: 'XDT_MicrosoftApplicationInsights_Mode'
           value: 'recommended'
+        }
+        // Imported
+        {
+          name: 'AllowedHosts'
+          value: '*'
+        }
+        {
+          name: 'EnvironmentSettings__EnvironmentType'
+          value: 'LocalDevelopment'
+        }
+        {
+          name: 'EnvironmentSettings__MinAppVersion'
+          value: '2.0.0'
+        }
+        {
+          name: 'EnvironmentSettings__DeploymentUrl'
+          value: 'https://localhost:8080/'
+        }
+        {
+          name: 'DatabaseSettings__ConnectionString'
+          value: '${keyvaultSecretURL}/DatabaseSettings__ConnectionString'
+        }
+        {
+          name: 'DatabaseSettings__SchemaName'
+          value: 'dbo'
+        }
+        {
+          name: 'IdentitySettings__TokenKey'
+          value: 'local-development-token'
+        }
+        {
+          name: 'IdentitySettings__AdminToken'
+          value: 'local-development-admintoken'
+        }
+        {
+          name: 'MailgunSettings__ApiKey'
+          value: '${keyvaultSecretURL}/MailgunSettings__ApiKey'
+        }
+        {
+          name: 'MailgunSettings__Domain'
+          value: 'localhost'
+        }
+        {
+          name: 'MailgunSettings__EmailBaseUrl'
+          value: 'https://localhost'
+        }
+        {
+          name: 'MailgunSettings__MailgunApiUrl'
+          value: 'https://api.mailgun.net/v3'
+        }
+        {
+          name: 'MobilePaySettings__MerchantId'
+          value: '${keyvaultSecretURL}/MobilePaySettings__MerchantId'
+        }
+        {
+          name: 'MobilePaySettings__SubscriptionKey'
+          value: '${keyvaultSecretURL}/MobilePaySettings__SubscriptionKey'
+        }
+        {
+          name: 'MobilePaySettings__CertificateName'
+          value: '${keyvaultSecretURL}/MobilePaySettings__CertificateName'
+        }
+        {
+          name: 'MobilePaySettings__CertificatePassword'
+          value: '${keyvaultSecretURL}/MobilePaySettings__CertificatePassword'
+        }
+        {
+          name: 'MobilePaySettingsV2__ApiUrl'
+          value: 'https://invalidurl.test/'
+        }
+        {
+          name: 'MobilePaySettingsV2__ApiKey'
+          value: '${keyvaultSecretURL}/MobilePaySettingsV2__ApiKey'
+        }
+        {
+          name: 'MobilePaySettingsV2__ClientId'
+          value: '${keyvaultSecretURL}/MobilePaySettingsV2__ClientId'
+        }
+        {
+          name: 'MobilePaySettingsV2__PaymentPointId'
+          value: '${keyvaultSecretURL}/MobilePaySettingsV2__PaymentPointId'
+        }
+        {
+          name: 'MobilePaySettingsV2__WebhookUrl'
+          value: 'https://invalidurl.test/'
+        }
+        {
+          name: 'LoginLimiterSettings__IsEnabled'
+          value: 'true'
+        }
+        // Read as a keyvault reference
+        {
+          name: 'LoginLimiterSettings__MaximumLoginAttemptsWithinTimeOut'
+          value: '${keyvaultSecretURL}/LoginLimiterSettings__MaximumLoginAttemptsWithinTimeOut'
         }
       ]
     }
@@ -101,7 +202,7 @@ module webappManagedCertificate '../modules/webappManagedCertificate.bicep' = if
   }
 }
 
-module keyvault '../modules/keyVault.bicep' = {
+module keyvaultModule '../modules/keyVault.bicep' = {
   name: '${deployment().name}-${applicationPrefix}-kv'
   params: {
     organizationPrefix: organizationPrefix
@@ -121,7 +222,7 @@ resource keyvaultSecretUserRole 'Microsoft.Authorization/roleDefinitions@2022-04
 module webappKeyvaultRoleAssignment '../modules/keyvaultRoleassignment.bicep' = {
   name: '${deployment().name}-${applicationPrefix}-rbac-kvwebapp'
   params: {
-    keyvaultName: keyvault.outputs.keyvaultName
+    keyvaultName: keyvaultModule.outputs.keyvaultName
     roleDefinitionId: keyvaultSecretUserRole.id
     principalId: webapp.identity.principalId
   }
