@@ -36,7 +36,9 @@ resource keyvault 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
   scope: resourceGroup(sharedResourceGroupName)
 }
 
-var keyvaultSecretURL = '${reference(keyvault.id, '2022-07-01').properties.vaultUri}/secrets'
+var keyvaultState = reference(keyvault.id, '2022-07-01').outputs
+var keyvaultSecretURL = '${keyvaultState.vaultUri}/secrets'
+
 
 resource webapp 'Microsoft.Web/sites@2022-03-01' = {
   name: 'app-${organizationPrefix}-${applicationPrefix}-${environment}'
