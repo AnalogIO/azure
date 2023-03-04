@@ -8,6 +8,7 @@ jobs:
   build_validate:
     name: Build and validate
     uses: ./.github/workflows/build-validate.yml
+    secrets: inherit
 
   deploy:
     name: Deploy ARM template
