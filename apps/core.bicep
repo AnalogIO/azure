@@ -86,7 +86,7 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'DatabaseSettings__ConnectionString'
-          value: '${keyvaultSecretURL}/DatabaseSettings__ConnectionString'
+          value: '@Microsoft.KeyVault(SecretUri=${keyvaultSecretURL}/DatabaseSettings__ConnectionString)'
         }
         {
           name: 'DatabaseSettings__SchemaName'
@@ -102,7 +102,7 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'MailgunSettings__ApiKey'
-          value: '${keyvaultSecretURL}/MailgunSettings__ApiKey'
+          value: '@Microsoft.KeyVault(SecretUri=${keyvaultSecretURL}/MailgunSettings__ApiKey)'
         }
         {
           name: 'MailgunSettings__Domain'
@@ -118,19 +118,19 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'MobilePaySettings__MerchantId'
-          value: '${keyvaultSecretURL}/MobilePaySettings__MerchantId'
+          value: '@Microsoft.KeyVault(SecretUri=${keyvaultSecretURL}/MobilePaySettings__MerchantId)'
         }
         {
           name: 'MobilePaySettings__SubscriptionKey'
-          value: '${keyvaultSecretURL}/MobilePaySettings__SubscriptionKey'
+          value: '@Microsoft.KeyVault(SecretUri=${keyvaultSecretURL}/MobilePaySettings__SubscriptionKey)'
         }
         {
           name: 'MobilePaySettings__CertificateName'
-          value: '${keyvaultSecretURL}/MobilePaySettings__CertificateName'
+          value: '@Microsoft.KeyVault(SecretUri=${keyvaultSecretURL}/MobilePaySettings__CertificateName)'
         }
         {
           name: 'MobilePaySettings__CertificatePassword'
-          value: '${keyvaultSecretURL}/MobilePaySettings__CertificatePassword'
+          value: '@Microsoft.KeyVault(SecretUri=${keyvaultSecretURL}/MobilePaySettings__CertificatePassword)'
         }
         {
           name: 'MobilePaySettingsV2__ApiUrl'
@@ -138,15 +138,15 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
         }
         {
           name: 'MobilePaySettingsV2__ApiKey'
-          value: '${keyvaultSecretURL}/MobilePaySettingsV2__ApiKey'
+          value: '@Microsoft.KeyVault(SecretUri=${keyvaultSecretURL}/MobilePaySettingsV2__ApiKey)'
         }
         {
           name: 'MobilePaySettingsV2__ClientId'
-          value: '${keyvaultSecretURL}/MobilePaySettingsV2__ClientId'
+          value: '@Microsoft.KeyVault(SecretUri=${keyvaultSecretURL}/MobilePaySettingsV2__ClientId)'
         }
         {
           name: 'MobilePaySettingsV2__PaymentPointId'
-          value: '${keyvaultSecretURL}/MobilePaySettingsV2__PaymentPointId'
+          value: '@Microsoft.KeyVault(SecretUri=${keyvaultSecretURL}/MobilePaySettingsV2__PaymentPointId)'
         }
         {
           name: 'MobilePaySettingsV2__WebhookUrl'
