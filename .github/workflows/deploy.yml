@@ -14,6 +14,9 @@ jobs:
     name: Deploy ARM template
     runs-on: ubuntu-latest
     needs: [build_validate]
+    environment:
+      name: dev
+      url: ${{ vars.AZURE_SUBSCRIPTION_URL }}
 
     steps:
       - name: Download Artifact
