@@ -41,16 +41,17 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
     type: 'SystemAssigned'
   }
   properties: {
-    enabled: true
     serverFarmId: appservicePlan.id
+    enabled: true
     reserved: true
     siteConfig: {
       numberOfWorkers: 1
       alwaysOn: false
-      linuxFxVersion: 'DOTNETCORE|6.0'
+      linuxFxVersion: 'DOCKER|ghcr.io/analogio/coffeecard-api:feature-azure-deploy'
       http20Enabled: true
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
+      logsDirectorySizeLimit: 100 // MB
       appSettings: [
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
