@@ -13,6 +13,14 @@ param skuTier string
 
 resource sqlServer 'Microsoft.Sql/servers@2021-11-01' existing = {
   name: sqlServerName
+
+  resource firewallRules 'firewallRules@2021-11-01' = {
+    name: 'default'
+    properties: {
+      endIpAddress: '0.0.0.0' // 0.0.0.0 allows all internal azure ips
+      startIpAddress: '0.0.0.0'
+    }
+  }
 }
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
