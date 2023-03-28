@@ -12,7 +12,7 @@ jobs:
 
   deploy:
     name: Deploy ARM template
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [build_validate]
     environment:
       name: dev
