@@ -28,47 +28,47 @@
   "keyVaultReferences": [
     {
       "name": "IdentityServerSettings__TokenKey",
-      "secretKey": "IdentityServerSettings-TokenKey"
+      "secretName": "IdentityServerSettings-TokenKey"
     },
     {
       "name": "IdentitySettings__AdminToken",
-      "secretKey": "IdentitySettings-AdminToken"
+      "secretName": "IdentitySettings-AdminToken"
     },
     {
       "name": "DatabaseSettings__ConnectionString",
-      "secretKey": "DatabaseSettings-ConnectionString"
+      "secretName": "DatabaseSettings-ConnectionString"
     },
     {
       "name": "MailgunSettings__ApiKey",
-      "secretKey": "MailgunSettings-ApiKey"
+      "secretName": "MailgunSettings-ApiKey"
     },
     {
       "name": "MobilePaySettings__MerchantId",
-      "secretKey": "MobilePaySettings-MerchantId"
+      "secretName": "MobilePaySettings-MerchantId"
     },
     {
       "name": "MobilePaySettings__SubscriptionKey",
-      "secretKey": "MobilePaySettings-SubscriptionKey"
+      "secretName": "MobilePaySettings-SubscriptionKey"
     },
     {
       "name": "MobilePaySettings__CertificateName",
-      "secretKey": "MobilePaySettings-CertificateName"
+      "secretName": "MobilePaySettings-CertificateName"
     },
     {
       "name": "MobilePaySettings__CertificatePassword",
-      "secretKey": "MobilePaySettings-CertificatePassword"
+      "secretName": "MobilePaySettings-CertificatePassword"
     },
     {
       "name": "MobilePaySettingsV2__ApiKey",
-      "secretKey": "MobilePaySettingsV2-ApiKey"
+      "secretName": "MobilePaySettingsV2-ApiKey"
     },
     {
       "name": "MobilePaySettingsV2__ClientId",
-      "secretKey": "MobilePaySettingsV2-ClientId"
+      "secretName": "MobilePaySettingsV2-ClientId"
     },
     {
       "name": "MobilePaySettingsV2__PaymentPointId",
-      "secretKey": "MobilePaySettingsV2-PaymentPointId"
+      "secretName": "MobilePaySettingsV2-PaymentPointId"
     }
   ]
 }
