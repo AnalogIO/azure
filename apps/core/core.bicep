@@ -14,6 +14,13 @@ param sqlServerName string
 
 param enableCustomDomain bool = false
 
+var isPrd = environment == 'prd'
+
+var envSettings = isPrd ? loadJsonContent('prd_settings.json') : loadJsonContent('dev_settings.json')
+
+var appSettings = array(envSettings.appSettings)
+var keyvaultReferences = array(envSettings.keyvaultReferences)
+
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
   name: logAnalyticsWorkspaceName
   scope: resourceGroup(sharedResourceGroupName)
@@ -21,7 +28,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
 
 var keyvaultName = keyvaultModule.outputs.keyvaultName
 
-module webapp '../modules/webapp.bicep' = {
+module webapp '../../modules/webapp.bicep' = {
   name: '${deployment().name}-${applicationPrefix}-webapp'
   scope: resourceGroup(sharedResourceGroupName)
   params: {
@@ -35,10 +42,12 @@ module webapp '../modules/webapp.bicep' = {
     logAnalyticsWorkspaceId: logAnalyticsWorkspace.id
     enableCustomDomain: enableCustomDomain
     keyvaultName: keyvaultName
+    appSettings: appSettings
+    keyvaultReferences: keyvaultReferences
   }
 }
 
-module sqlDb '../modules/sqldatabase.bicep' = {
+module sqlDb '../../modules/sqldatabase.bicep' = {
   name: '${deployment().name}-${applicationPrefix}-sqldb'
   scope: resourceGroup(sharedResourceGroupName)
   params: {
@@ -54,7 +63,7 @@ module sqlDb '../modules/sqldatabase.bicep' = {
   }
 }
 
-module keyvaultModule '../modules/keyVault.bicep' = {
+module keyvaultModule '../../modules/keyVault.bicep' = {
   name: '${deployment().name}-${applicationPrefix}-kv'
   params: {
     organizationPrefix: organizationPrefix
@@ -72,7 +81,7 @@ resource keyvaultSecretUserRole 'Microsoft.Authorization/roleDefinitions@2022-04
   name: '4633458b-17de-408a-b874-0445c86b69e6'
 }
 
-module webappKeyvaultRoleAssignment '../modules/keyvaultRoleassignment.bicep' = {
+module webappKeyvaultRoleAssignment '../../modules/keyvaultRoleassignment.bicep' = {
   name: '${deployment().name}-${applicationPrefix}-rbac-kvwebapp'
   params: {
     keyvaultName: keyvaultModule.outputs.keyvaultName

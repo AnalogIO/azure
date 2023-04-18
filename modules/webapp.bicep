@@ -12,14 +12,10 @@ param appservicePlanName string
 param applicationInsightsName string
 param logAnalyticsWorkspaceId string
 
+param appSettings array
+param keyvaultReferences array
+
 param enableCustomDomain bool = false
-
-var isPrd = environment == 'prd'
-
-var envSettings = isPrd ? loadJsonContent('../prd_settings.json') : loadJsonContent('../dev_settings.json')
-
-var appSettings = array(envSettings.appSettings)
-var keyvaultReferences = array(envSettings.keyvaultReferences)
 
 var keyvaultReferencesFormatted = [for item in keyvaultReferences: {
   name: item.name
@@ -79,84 +75,16 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
             value: '*'
           }
           {
-            name: 'EnvironmentSettings__EnvironmentType'
-            value: 'LocalDevelopment'
-          }
-          {
             name: 'EnvironmentSettings__MinAppVersion'
             value: '2.0.0'
-          }
-          {
-            name: 'EnvironmentSettings__DeploymentUrl'
-            value: 'https://localhost:8080/'
-          }
-          {
-            name: 'DatabaseSettings__ConnectionString'
-            value: '@Microsoft.KeyVault(VaultName=${keyvaultName};SecretName=DatabaseSettings-ConnectionString)'
           }
           {
             name: 'DatabaseSettings__SchemaName'
             value: 'dbo'
           }
           {
-            name: 'IdentitySettings__TokenKey'
-            value: 'local-development-token'
-          }
-          {
-            name: 'IdentitySettings__AdminToken'
-            value: 'local-development-admintoken'
-          }
-          {
-            name: 'MailgunSettings__ApiKey'
-            value: '@Microsoft.KeyVault(VaultName=${keyvaultName};SecretName=MailgunSettings-ApiKey)'
-          }
-          {
-            name: 'MailgunSettings__Domain'
-            value: 'localhost'
-          }
-          {
-            name: 'MailgunSettings__EmailBaseUrl'
-            value: 'https://localhost'
-          }
-          {
             name: 'MailgunSettings__MailgunApiUrl'
             value: 'https://api.mailgun.net/v3'
-          }
-          {
-            name: 'MobilePaySettings__MerchantId'
-            value: '@Microsoft.KeyVault(VaultName=${keyvaultName};SecretName=MobilePaySettings-MerchantId)'
-          }
-          {
-            name: 'MobilePaySettings__SubscriptionKey'
-            value: '@Microsoft.KeyVault(VaultName=${keyvaultName};SecretName=MobilePaySettings-SubscriptionKey)'
-          }
-          {
-            name: 'MobilePaySettings__CertificateName'
-            value: '@Microsoft.KeyVault(VaultName=${keyvaultName};SecretName=MobilePaySettings-CertificateName)'
-          }
-          {
-            name: 'MobilePaySettings__CertificatePassword'
-            value: '@Microsoft.KeyVault(VaultName=${keyvaultName};SecretName=MobilePaySettings-CertificatePassword)'
-          }
-          {
-            name: 'MobilePaySettingsV2__ApiUrl'
-            value: 'https://invalidurl.test/'
-          }
-          {
-            name: 'MobilePaySettingsV2__ApiKey'
-            value: '@Microsoft.KeyVault(VaultName=${keyvaultName};SecretName=MobilePaySettingsV2-ApiKey)'
-          }
-          {
-            name: 'MobilePaySettingsV2__ClientId'
-            value: '@Microsoft.KeyVault(VaultName=${keyvaultName};SecretName=MobilePaySettingsV2-ClientId)'
-          }
-          {
-            name: 'MobilePaySettingsV2__PaymentPointId'
-            value: '@Microsoft.KeyVault(VaultName=${keyvaultName};SecretName=MobilePaySettingsV2-PaymentPointId)'
-          }
-          {
-            name: 'MobilePaySettingsV2__WebhookUrl'
-            value: 'https://invalidurl.test/'
           }
           {
             name: 'LoginLimiterSettings__IsEnabled'

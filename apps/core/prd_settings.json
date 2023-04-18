@@ -1,0 +1,22 @@
+{
+  "appSettings": [
+    {
+      "name": "EnvironmentSettings__EnvironmentType",
+      "value": "???"
+    },
+    {
+      "name": "EnvironmentSettings__DeploymentUrl",
+      "value": "???"
+    }
+  ],
+  "keyVaultReferences": [
+    {
+      "name": "DatabaseSettings__ConnectionString",
+      "secretName": "DatabaseSettings-ConnectionString"
+    },
+    {
+      "name": "MailgunSettings__ApiKey",
+      "secretName": "MailgunSettings-ApiKey"
+    }
+  ]
+}

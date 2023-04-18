@@ -1,0 +1,74 @@
+{
+  "appSettings": [
+    {
+      "name": "EnvironmentSettings__EnvironmentType",
+      "value": "LocalDevelopment"
+    },
+    {
+      "name": "EnvironmentSettings__DeploymentUrl",
+      "value": "https://localhost:8080/"
+    },
+    {
+      "name": "MailgunSettings__Domain",
+      "value": "localhost"
+    },
+    {
+      "name": "MailgunSettings__EmailBaseUrl",
+      "value": "https://localhost"
+    },
+    {
+      "name": "MobilePaySettingsV2__ApiUrl",
+      "value": "https://invalidurl.test/"
+    },
+    {
+      "name": "MobilePaySettingsV2__WebhookUrl",
+      "value": "https://invalidurl.test/"
+    }
+  ],
+  "keyVaultReferences": [
+    {
+      "name": "IdentityServerSettings__TokenKey",
+      "secretKey": "IdentityServerSettings-TokenKey"
+    },
+    {
+      "name": "IdentitySettings__AdminToken",
+      "secretKey": "IdentitySettings-AdminToken"
+    },
+    {
+      "name": "DatabaseSettings__ConnectionString",
+      "secretKey": "DatabaseSettings-ConnectionString"
+    },
+    {
+      "name": "MailgunSettings__ApiKey",
+      "secretKey": "MailgunSettings-ApiKey"
+    },
+    {
+      "name": "MobilePaySettings__MerchantId",
+      "secretKey": "MobilePaySettings-MerchantId"
+    },
+    {
+      "name": "MobilePaySettings__SubscriptionKey",
+      "secretKey": "MobilePaySettings-SubscriptionKey"
+    },
+    {
+      "name": "MobilePaySettings__CertificateName",
+      "secretKey": "MobilePaySettings-CertificateName"
+    },
+    {
+      "name": "MobilePaySettings__CertificatePassword",
+      "secretKey": "MobilePaySettings-CertificatePassword"
+    },
+    {
+      "name": "MobilePaySettingsV2__ApiKey",
+      "secretKey": "MobilePaySettingsV2-ApiKey"
+    },
+    {
+      "name": "MobilePaySettingsV2__ClientId",
+      "secretKey": "MobilePaySettingsV2-ClientId"
+    },
+    {
+      "name": "MobilePaySettingsV2__PaymentPointId",
+      "secretKey": "MobilePaySettingsV2-PaymentPointId"
+    }
+  ]
+}

@@ -47,7 +47,7 @@ resource coreRg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   location: location
 }
 
-module corewebapp 'apps/core.bicep' = {
+module corewebapp 'apps/core/core.bicep' = {
   name: '${deployment().name}-app-core'
   scope: coreRg
   params: {
