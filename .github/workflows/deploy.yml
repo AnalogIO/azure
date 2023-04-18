@@ -12,6 +12,7 @@ jobs:
 
   deploy_dev:
     name: Deploy to dev
+    needs: [build_validate]
     uses: ./.github/workflows/deploy_template.yml
     secrets: inherit
     with:
