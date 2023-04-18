@@ -19,7 +19,7 @@ var isPrd = environment == 'prd'
 var envSettings = isPrd ? loadJsonContent('prd_settings.json') : loadJsonContent('dev_settings.json')
 
 var appSettings = array(envSettings.appSettings)
-var keyvaultReferences = array(envSettings.keyvaultReferences)
+var keyVaultReferences = array(envSettings.keyVaultReferences)
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
   name: logAnalyticsWorkspaceName
@@ -43,7 +43,7 @@ module webapp '../../modules/webapp.bicep' = {
     enableCustomDomain: enableCustomDomain
     keyvaultName: keyvaultName
     appSettings: appSettings
-    keyvaultReferences: keyvaultReferences
+    keyVaultReferences: keyVaultReferences
   }
 }
 

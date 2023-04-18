@@ -13,11 +13,11 @@ param applicationInsightsName string
 param logAnalyticsWorkspaceId string
 
 param appSettings array
-param keyvaultReferences array
+param keyVaultReferences array
 
 param enableCustomDomain bool = false
 
-var keyvaultReferencesFormatted = [for item in keyvaultReferences: {
+var keyVaultReferencesFormatted = [for item in keyVaultReferences: {
   name: item.name
   value: '@Microsoft.KeyVault(VaultName=${keyvaultName};SecretName=${item.secretName})'
 }]
@@ -94,7 +94,7 @@ resource webapp 'Microsoft.Web/sites@2022-03-01' = {
             name: 'LoginLimiterSettings__MaximumLoginAttemptsWithinTimeOut'
             value: '5'
           }
-        ], appSettings, keyvaultReferencesFormatted)
+        ], appSettings, keyVaultReferencesFormatted)
     }
     httpsOnly: true
     redundancyMode: 'None'
