@@ -2,7 +2,7 @@ name: Deploy ARM template
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/atro/dynamicAppSettings]
 
 jobs:
   build_validate:
