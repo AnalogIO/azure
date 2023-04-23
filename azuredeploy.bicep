@@ -38,9 +38,5 @@ module shiftywebapp 'apps/shifty.bicep' = {
     organizationPrefix: organizationPrefix
     applicationPrefix: 'shifty'
     environment: environment
-    sharedResourceGroupName: sharedRg.name
-    applicationInsightsName: sharedResources.outputs.applicationInsightsName
-    logAnalyticsWorkspaceName: sharedResources.outputs.logAnalyticsWorkspaceName
-    customDomainFqdn: config[environment].shifty.customDomainName
   }
 }
