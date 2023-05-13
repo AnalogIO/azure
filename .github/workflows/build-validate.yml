@@ -2,7 +2,7 @@ name: Validate ARM template
 
 on:
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
   workflow_dispatch:
 
@@ -16,7 +16,7 @@ jobs:
   validate:
     name: Validate
     runs-on: ubuntu-22.04
-    needs: [build]
+    needs: [ build ]
 
     steps:
       - name: Download Artifact

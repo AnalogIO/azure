@@ -1,8 +1,8 @@
-name: Deploy ARM template
+name: Azure deployment
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build_validate:
@@ -12,18 +12,24 @@ jobs:
 
   deploy_dev:
     name: Deploy to dev
-    needs: [build_validate]
+    needs: [ build_validate ]
     uses: ./.github/workflows/deploy_template.yml
     secrets: inherit
     with:
       environment: dev
       subscriptionId: analogio-dev
+    concurrency:
+      group: dev
+      cancel-in-progress: false
 
   deploy_prod:
     name: Deploy to prod
-    needs: [deploy_dev]
+    needs: [ deploy_dev ]
     uses: ./.github/workflows/deploy_template.yml
     secrets: inherit
     with:
-      environment: prod
+      environment: prd
       subscriptionId: analogio-prd
+    concurrency:
+      group: prd
+      cancel-in-progress: false
