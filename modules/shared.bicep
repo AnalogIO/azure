@@ -5,16 +5,13 @@ param location string = resourceGroup().location
 param organizationPrefix string
 param sharedResourcesAbbreviation string
 
+var isPrd = environment == 'prd'
+var settings = isPrd ? loadJsonContent('../prd.settings.json') : loadJsonContent('../dev.settings.json')
+
 resource appservicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'asp-${organizationPrefix}-${sharedResourcesAbbreviation}-${environment}'
   location: location
-  sku: {
-    name: 'B1'
-    tier: 'Basic'
-    family: 'B'
-    size: 'B1'
-    capacity: 1
-  }
+  sku: settings.appServicePlanSku.sku
   kind: 'linux'
   properties: {
     perSiteScaling: true
