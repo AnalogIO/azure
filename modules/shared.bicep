@@ -11,7 +11,7 @@ var settings = isPrd ? loadJsonContent('../prd.settings.json') : loadJsonContent
 resource appservicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: 'asp-${organizationPrefix}-${sharedResourcesAbbreviation}-${environment}'
   location: location
-  sku: settings.appServicePlanSku.sku
+  sku: settings.appservicePlan.sku
   kind: 'linux'
   properties: {
     perSiteScaling: true
