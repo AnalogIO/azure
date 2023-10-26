@@ -42,6 +42,8 @@ module alertLogicApp 'modules/alert-logicapp.bicep' = {
   name: '${deployment().name}-alert-logic-app'
   scope: sharedRg
   params: {
+    organizationPrefix: organizationPrefix
+    sharedResourcesAbbreviation: sharedResourcesAbbreviation
     environment: environment
   }
 }
