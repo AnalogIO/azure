@@ -5,14 +5,14 @@ on:
     branches: [ main ]
 
 jobs:
-  build_validate:
-    name: Build and validate
-    uses: ./.github/workflows/build-validate.yml
+  build:
+    name: Build
+    uses: ./.github/workflows/build.yml
     secrets: inherit
 
   deploy_dev:
     name: Deploy to dev
-    needs: [ build_validate ]
+    needs: [ build ]
     uses: ./.github/workflows/deploy_template.yml
     secrets: inherit
     with:
