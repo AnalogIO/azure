@@ -30,21 +30,20 @@ resource shiftyRg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   location: location
 }
 
-module shiftywebapp 'apps/shifty.bicep' = {
-  name: '${deployment().name}-app-shifty'
-  scope: shiftyRg
-  params: {
-    location: location
-    organizationPrefix: organizationPrefix
-    applicationPrefix: 'shifty'
-    environment: environment
-  }
-}
-
 module dns 'modules/dns.bicep' = {
   name: '${deployment().name}-dns'
   scope: sharedRg
   params: {
+    environment: environment
+  }
+}
+
+module alertLogicApp 'modules/alert-logicapp.bicep' = {
+  name: '${deployment().name}-alert-logic-app'
+  scope: sharedRg
+  params: {
+    organizationPrefix: organizationPrefix
+    sharedResourcesAbbreviation: sharedResourcesAbbreviation
     environment: environment
   }
 }
