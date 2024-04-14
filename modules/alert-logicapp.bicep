@@ -1,4 +1,4 @@
-@allowed([ 'dev', 'prd' ])
+@allowed(['dev', 'prd'])
 param environment string
 param location string = resourceGroup().location
 
@@ -7,17 +7,18 @@ param sharedResourcesAbbreviation string
 
 var slackConnectionName = 'AnalogIO'
 
-@description('The Slack channel to post to.')
+@description('The Slack channel to post to')
 param slackChannel string = 'io-alerts'
 
+var connectionId = subscriptionResourceId('Microsoft.Web/locations/managedApis', location, 'slack')
 resource slackConnection 'Microsoft.Web/connections@2016-06-01' = {
   location: location
   name: slackConnectionName
   properties: {
     api: {
-      id: subscriptionResourceId('Microsoft.Web/locations/managedApis', location, 'slack')
+      id: connectionId
     }
-    displayName: 'slack'
+    displayName: 'CafeAnalog'
   }
 }
 
@@ -27,7 +28,27 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
   properties: {
     definition: {
       '$schema': 'https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#'
+      actions: {
+        'Post_message_(V2)': {
+          inputs: {
+            body: {
+              channel: slackChannel
+              text: ':rotating_light: :rotating_light: *Azure alert `@{triggerBody()?[\'data\']?[\'essentials\']?[\'alertRule\']}` (severity @{triggerBody()?[\'data\']?[\'essentials\']?[\'severity\']}) is @{triggerBody()?[\'data\']?[\'essentials\']?[\'monitorCondition\']}*\n\nAffected Resources\n```\n@{join(triggerBody()?[\'data\']?[\'essentials\']?[\'alertTargetIDs\'], \'\n\')}\n```\n'
+            }
+            host: {
+              connection: {
+                name: '@parameters(\'$connections\')[\'slack\'][\'connectionId\']'
+              }
+            }
+            method: 'post'
+            path: '/v2/chat.postMessage'
+          }
+          runAfter: {}
+          type: 'ApiConnection'
+        }
+      }
       contentVersion: '1.0.0.0'
+      outputs: {}
       parameters: {
         '$connections': {
           defaultValue: {}
@@ -35,92 +56,93 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
         }
       }
       triggers: {
-        manual: {
-          type: 'request'
-          kind: 'Http'
+        HTTP_Request: {
           inputs: {
             schema: {
-              '$schema': 'http://json-schema.org/draft-04/schema#'
               properties: {
-                context: {
+                data: {
                   properties: {
-                    name: {
-                      type: 'string'
+                    alertContext: {
+                      properties: {}
+                      type: 'object'
                     }
-                    portalLink: {
-                      type: 'string'
-                    }
-                    resourceName: {
-                      type: 'string'
+                    essentials: {
+                      properties: {
+                        alertContextVersion: {
+                          type: 'string'
+                        }
+                        alertId: {
+                          type: 'string'
+                        }
+                        alertRule: {
+                          type: 'string'
+                        }
+                        alertTargetIDs: {
+                          items: {
+                            type: 'string'
+                          }
+                          type: 'array'
+                        }
+                        description: {
+                          type: 'string'
+                        }
+                        essentialsVersion: {
+                          type: 'string'
+                        }
+                        firedDateTime: {
+                          type: 'string'
+                        }
+                        monitorCondition: {
+                          type: 'string'
+                        }
+                        monitoringService: {
+                          type: 'string'
+                        }
+                        originAlertId: {
+                          type: 'string'
+                        }
+                        resolvedDateTime: {
+                          type: 'string'
+                        }
+                        severity: {
+                          type: 'string'
+                        }
+                        signalType: {
+                          type: 'string'
+                        }
+                      }
+                      type: 'object'
                     }
                   }
-                  required: [
-                    'name'
-                    'portalLink'
-                    'resourceName'
-                  ]
                   type: 'object'
                 }
-                status: {
+                schemaId: {
                   type: 'string'
                 }
               }
-              required: [
-                'status'
-                'context'
-              ]
               type: 'object'
             }
           }
+          kind: 'Http'
+          operationOptions: 'EnableSchemaValidation'
+          type: 'Request'
         }
       }
-      actions: {
-        Http: {
-          type: 'Http'
-          inputs: {
-            body: {
-              longUrl: '@{triggerBody()[\'context\'][\'portalLink\']}'
-            }
-            headers: {
-              'Content-Type': 'application/json'
-            }
-            method: 'POST'
-            uri: 'https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBkT1BRbA-uULHz8HMUAi0ywJtpNLXHShI'
-          }
-        }
-        Post_Message: {
-          type: 'ApiConnection'
-          inputs: {
-            host: {
-              connection: {
-                name: '@parameters(\'$connections\')[\'slack\'][\'connectionId\']'
-              }
-            }
-            method: 'post'
-            path: '/chat.postMessage'
-            queries: {
-              channel: slackChannel
-              text: 'Azure Alert - \'@{triggerBody()[\'context\'][\'name\']}\' @{triggerBody()[\'status\']} on \'@{triggerBody()[\'context\'][\'resourceName\']}\'.  Details: @{body(\'Http\')[\'id\']}'
-            }
-          }
-          runAfter: {
-            Http: [
-              'Succeeded'
-            ]
-          }
-        }
-      }
-      outputs: {}
     }
     parameters: {
       '$connections': {
         value: {
           slack: {
-            id: subscriptionResourceId('Microsoft.Web/locations/managedApis', location, 'slack')
             connectionId: slackConnection.id
+            connectionName: slackConnection.name
+            id: connectionId
           }
         }
       }
     }
   }
 }
+
+output logicAppName string = logicApp.name
+output logicAppResourceId string = logicApp.id
+output logicAppCallbackUrl string = logicApp.listCallbackUrl()
