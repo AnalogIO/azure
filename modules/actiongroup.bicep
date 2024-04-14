@@ -25,7 +25,7 @@ resource actiongroup 'Microsoft.Insights/actionGroups@2023-01-01' = {
       for app in logicAppReceivers: {
         name: app.name
         resourceId: app.ResourceId
-        callbackUrl: listCallbackUrl(app.ResourceId, '2019-05-01').value
+        callbackUrl: listCallbackUrl('${app.ResourceId}${app.urlPath}', app.apiVersion).value
         useCommonAlertSchema: app.UseCommonAlertSchema
       }
     ]

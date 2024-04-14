@@ -5,7 +5,7 @@ param location string = resourceGroup().location
 param organizationPrefix string
 param sharedResourcesAbbreviation string
 
-var slackConnectionName = 'AnalogIO'
+var slackConnectionName = 'CafeAnalog'
 
 @description('The Slack channel to post to')
 param slackChannel string = 'io-alerts'
@@ -18,7 +18,7 @@ resource slackConnection 'Microsoft.Web/connections@2016-06-01' = {
     api: {
       id: connectionId
     }
-    displayName: 'CafeAnalog'
+    displayName: slackConnectionName
   }
 }
 

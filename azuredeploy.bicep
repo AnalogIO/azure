@@ -60,6 +60,8 @@ module actionGroup 'modules/actiongroup.bicep' = {
       {
         name: alertLogicApp.outputs.logicAppName
         resourceId: alertLogicApp.outputs.logicAppResourceId
+        urlPath: '/triggers/HTTP_Request/paths/invoke'
+        apiVersion: '2019-05-01'
         useCommonAlertSchema: true
       }
     ]
