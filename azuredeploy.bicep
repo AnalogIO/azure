@@ -1,6 +1,6 @@
 targetScope = 'subscription'
 
-@allowed([ 'dev', 'prd' ])
+@allowed(['dev', 'prd'])
 param environment string
 
 var location = 'West Europe'
@@ -45,5 +45,24 @@ module alertLogicApp 'modules/alert-logicapp.bicep' = {
     organizationPrefix: organizationPrefix
     sharedResourcesAbbreviation: sharedResourcesAbbreviation
     environment: environment
+  }
+}
+
+module actionGroup 'modules/actiongroup.bicep' = {
+  name: '${deployment().name}-actiongroup'
+  scope: sharedRg
+  params: {
+    organizationPrefix: organizationPrefix
+    sharedResourcesAbbreviation: sharedResourcesAbbreviation
+    environment: environment
+    emailReceivers: ['support@analogio.dk']
+    logicAppReceivers: [
+      {
+        name: alertLogicApp.outputs.logicAppName
+        resourceId: alertLogicApp.outputs.logicAppResourceId
+        callbackUrl: alertLogicApp.outputs.logicAppCallbackUrl
+        useCommonAlertSchema: true
+      }
+    ]
   }
 }
