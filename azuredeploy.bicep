@@ -60,7 +60,6 @@ module actionGroup 'modules/actiongroup.bicep' = {
       {
         name: alertLogicApp.outputs.logicAppName
         resourceId: alertLogicApp.outputs.logicAppResourceId
-        callbackUrl: alertLogicApp.outputs.logicAppCallbackUrl
         useCommonAlertSchema: true
       }
     ]

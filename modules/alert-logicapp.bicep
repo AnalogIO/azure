@@ -145,4 +145,3 @@ resource logicApp 'Microsoft.Logic/workflows@2019-05-01' = {
 
 output logicAppName string = logicApp.name
 output logicAppResourceId string = logicApp.id
-output logicAppCallbackUrl string = logicApp.listCallbackUrl()
