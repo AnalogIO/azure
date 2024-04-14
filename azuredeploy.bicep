@@ -59,7 +59,7 @@ module actionGroup 'modules/actiongroup.bicep' = {
     logicAppReceivers: [
       {
         name: alertLogicApp.outputs.logicAppName
-        urlPath: 'HTTP_Request'
+        triggerName: 'HTTP_Request'
         apiVersion: '2019-05-01'
         useCommonAlertSchema: true
       }
