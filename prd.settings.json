@@ -5,7 +5,7 @@
             "tier": "Basic",
             "family": "B",
             "size": "B2",
-            "capacity": "1"
+            "capacity": 1
         }
     }
 }
