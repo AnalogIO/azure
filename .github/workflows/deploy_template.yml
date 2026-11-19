@@ -33,6 +33,7 @@ jobs:
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
       - name: Deploy ARM template
+        id: deploy
         uses: azure/arm-deploy@v2
         with:
           subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
@@ -42,3 +43,17 @@ jobs:
           parameters: "environment=${{ inputs.environment }}"
           deploymentName: "azuredeploy-${{github.run_number}}"
           failOnStdErr: true
+
+      - name: Download function app package
+        if: steps.deploy.outputs.scalingFunctionAppName != ''
+        uses: actions/download-artifact@v8
+        with:
+          name: function
+
+      - name: Deploy scaling function
+        if: steps.deploy.outputs.scalingFunctionAppName != ''
+        run: |
+          az functionapp deployment source config-zip \
+            --resource-group ${{ steps.deploy.outputs.scalingResourceGroupName }} \
+            --name ${{ steps.deploy.outputs.scalingFunctionAppName }} \
+            --src function.zip
