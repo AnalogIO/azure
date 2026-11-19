@@ -27,6 +27,17 @@ The function app in `functions/AppServicePlanScaling` scales the App Service pla
 | `Scaling__OffPeakSku`     | `B1`                | SKU outside peak hours. Must have the same tier as `PeakSku`.  |
 | `Scaling__DryRun`         | `false`             | If `true`, log the change but do not scale the plan.           |
 
+### Settings per environment
+
+`appservicePlan.scaling` in the settings file for the environment (`dev.settings.json` or `prd.settings.json`) controls the function app. Set `enabled` to `false` to not deploy it. The other keys are optional and override the defaults above: `timeZone`, `peakStartHour`, `peakEndHour`, `peakSku` and `offPeakSku`. For example:
+
+```json
+"scaling": {
+    "enabled": true,
+    "peakEndHour": 17
+}
+```
+
 ### Run locally
 
 Requirements:

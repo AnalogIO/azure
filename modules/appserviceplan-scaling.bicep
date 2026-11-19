@@ -8,6 +8,26 @@ param sharedResourcesAbbreviation string
 param appservicePlanName string
 param applicationInsightsName string
 
+@description('Overrides of the schedule. A setting that is left out uses the default in the function code.')
+param scaling {
+  timeZone: string?
+  peakStartHour: int?
+  peakEndHour: int?
+  peakSku: string?
+  offPeakSku: string?
+}
+
+var scalingAppSettings = filter(
+  [
+    { name: 'Scaling__TimeZone', value: scaling.?timeZone }
+    { name: 'Scaling__PeakStartHour', value: scaling.?peakStartHour }
+    { name: 'Scaling__PeakEndHour', value: scaling.?peakEndHour }
+    { name: 'Scaling__PeakSku', value: scaling.?peakSku }
+    { name: 'Scaling__OffPeakSku', value: scaling.?offPeakSku }
+  ],
+  setting => setting.value != null
+)
+
 resource appservicePlan 'Microsoft.Web/serverfarms@2022-03-01' existing = {
   name: appservicePlanName
 }
@@ -96,20 +116,23 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
     siteConfig: {
       minTlsVersion: '1.2'
       ftpsState: 'Disabled'
-      appSettings: [
-        {
-          name: 'AzureWebJobsStorage__accountName'
-          value: storageAccount.name
-        }
-        {
-          name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
-          value: applicationInsights.properties.ConnectionString
-        }
-        {
-          name: 'Scaling__PlanResourceId'
-          value: appservicePlan.id
-        }
-      ]
+      appSettings: concat(
+        [
+          {
+            name: 'AzureWebJobsStorage__accountName'
+            value: storageAccount.name
+          }
+          {
+            name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+            value: applicationInsights.properties.ConnectionString
+          }
+          {
+            name: 'Scaling__PlanResourceId'
+            value: appservicePlan.id
+          }
+        ],
+        map(scalingAppSettings, setting => { name: setting.name, value: string(setting.value) })
+      )
     }
   }
 }
