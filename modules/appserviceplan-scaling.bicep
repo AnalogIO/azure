@@ -16,6 +16,18 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' existing
   name: applicationInsightsName
 }
 
+@description('Built-in Storage Blob Data Owner role')
+resource storageBlobDataOwnerRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  scope: subscription()
+  name: 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b'
+}
+
+@description('Built-in Web Plan Contributor role')
+resource webPlanContributorRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  scope: subscription()
+  name: '2cc479cb-7b4d-49a8-b449-8c00fd0f0a4b'
+}
+
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: 'st${organizationPrefix}${sharedResourcesAbbreviation}scaling${environment}'
   location: location
@@ -99,6 +111,26 @@ resource functionApp 'Microsoft.Web/sites@2024-04-01' = {
         }
       ]
     }
+  }
+}
+
+resource storageRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: storageAccount
+  name: guid(storageAccount.id, functionApp.id, storageBlobDataOwnerRole.id)
+  properties: {
+    roleDefinitionId: storageBlobDataOwnerRole.id
+    principalId: functionApp.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+resource planRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: appservicePlan
+  name: guid(appservicePlan.id, functionApp.id, webPlanContributorRole.id)
+  properties: {
+    roleDefinitionId: webPlanContributorRole.id
+    principalId: functionApp.identity.principalId
+    principalType: 'ServicePrincipal'
   }
 }
 
