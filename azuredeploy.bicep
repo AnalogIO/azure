@@ -81,6 +81,7 @@ module appservicePlanScaling 'modules/appserviceplan-scaling.bicep' = if (settin
     sharedResourcesAbbreviation: sharedResourcesAbbreviation
     appservicePlanName: sharedResources.outputs.appServicePlanName
     applicationInsightsName: sharedResources.outputs.applicationInsightsName
+    actionGroupId: actionGroup.outputs.actionGroupId
     scaling: settings.appservicePlan.scaling
   }
 }

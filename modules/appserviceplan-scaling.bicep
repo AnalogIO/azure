@@ -7,6 +7,7 @@ param sharedResourcesAbbreviation string
 
 param appservicePlanName string
 param applicationInsightsName string
+param actionGroupId string
 
 @description('Overrides of the schedule. A setting that is left out uses the default in the function code.')
 param scaling {
@@ -154,6 +155,78 @@ resource planRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01'
     roleDefinitionId: webPlanContributorRole.id
     principalId: functionApp.identity.principalId
     principalType: 'ServicePrincipal'
+  }
+}
+
+resource failedRunsAlert 'Microsoft.Insights/scheduledQueryRules@2023-12-01' = {
+  name: 'alert-failedruns-${functionApp.name}'
+  location: location
+  properties: {
+    description: 'A run of the function that scales App Service plan ${appservicePlan.name} failed'
+    severity: 2
+    enabled: true
+    autoMitigate: true
+    scopes: [
+      applicationInsights.id
+    ]
+    evaluationFrequency: 'PT15M'
+    windowSize: 'PT1H'
+    criteria: {
+      allOf: [
+        {
+          query: 'requests | where cloud_RoleName =~ "${functionApp.name}" and success == false'
+          timeAggregation: 'Count'
+          operator: 'GreaterThan'
+          threshold: 0
+          failingPeriods: {
+            numberOfEvaluationPeriods: 1
+            minFailingPeriodsToAlert: 1
+          }
+        }
+      ]
+    }
+    actions: {
+      actionGroups: [
+        actionGroupId
+      ]
+    }
+  }
+}
+
+// A function app that cannot start never logs a failed run, so alert when the hourly runs stop too
+resource missingRunsAlert 'Microsoft.Insights/scheduledQueryRules@2023-12-01' = {
+  name: 'alert-missingruns-${functionApp.name}'
+  location: location
+  properties: {
+    description: 'The function that scales App Service plan ${appservicePlan.name} has not run for 2 hours'
+    severity: 2
+    enabled: true
+    autoMitigate: true
+    scopes: [
+      applicationInsights.id
+    ]
+    evaluationFrequency: 'PT1H'
+    windowSize: 'PT2H'
+    criteria: {
+      allOf: [
+        {
+          query: 'requests | where cloud_RoleName =~ "${functionApp.name}" | summarize Runs = count()'
+          timeAggregation: 'Total'
+          metricMeasureColumn: 'Runs'
+          operator: 'LessThan'
+          threshold: 1
+          failingPeriods: {
+            numberOfEvaluationPeriods: 1
+            minFailingPeriodsToAlert: 1
+          }
+        }
+      ]
+    }
+    actions: {
+      actionGroups: [
+        actionGroupId
+      ]
+    }
   }
 }
 
