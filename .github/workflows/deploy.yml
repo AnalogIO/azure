@@ -2,7 +2,9 @@ name: Azure deployment
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+
+  workflow_dispatch:
 
 jobs:
   build:
@@ -12,24 +14,28 @@ jobs:
 
   deploy_dev:
     name: Deploy to dev
-    needs: [ build ]
+    needs: [build]
+    permissions:
+      contents: read
+      id-token: write
     uses: ./.github/workflows/deploy_template.yml
     secrets: inherit
     with:
       environment: dev
-      subscriptionId: analogio-dev
     concurrency:
       group: dev
       cancel-in-progress: false
 
   deploy_prod:
     name: Deploy to prod
-    needs: [ deploy_dev ]
+    needs: [deploy_dev]
+    permissions:
+      contents: read
+      id-token: write
     uses: ./.github/workflows/deploy_template.yml
     secrets: inherit
     with:
       environment: prd
-      subscriptionId: analogio-prd
     concurrency:
       group: prd
       cancel-in-progress: false
