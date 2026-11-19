@@ -67,3 +67,14 @@ module actionGroup 'modules/actiongroup.bicep' = {
     ]
   }
 }
+
+module appservicePlanScaling 'modules/appserviceplan-scaling.bicep' = {
+  name: '${deployment().name}-asp-scaling'
+  scope: sharedRg
+  params: {
+    location: location
+    environment: environment
+    organizationPrefix: organizationPrefix
+    sharedResourcesAbbreviation: sharedResourcesAbbreviation
+  }
+}
