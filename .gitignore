@@ -1,3 +1,10 @@
 # Ignore Json files
 azuredeploy.json
 .vscode
+
+.idea/
+
+# Function app build output and local settings
+bin/
+obj/
+local.settings.json

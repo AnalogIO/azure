@@ -5,7 +5,10 @@
             "tier": "Basic",
             "family": "B",
             "size": "B1",
-            "capacity": "1"
+            "capacity": 1
+        },
+        "scaling": {
+            "enabled": false
         }
     }
 }

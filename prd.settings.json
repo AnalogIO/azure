@@ -5,7 +5,12 @@
             "tier": "Basic",
             "family": "B",
             "size": "B2",
-            "capacity": "1"
+            "capacity": 1
+        },
+        "scaling": {
+            "enabled": true,
+            "peakSku": "B2",
+            "offPeakSku": "B1"
         }
     }
 }

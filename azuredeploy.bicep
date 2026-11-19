@@ -9,6 +9,9 @@ var organizationPrefix = 'aio'
 var sharedResourcesAbbreviation = 'shr'
 var webAppResourcesAbbreviation = 'app'
 
+var isPrd = environment == 'prd'
+var settings = isPrd ? loadJsonContent('prd.settings.json') : loadJsonContent('dev.settings.json')
+
 resource sharedRg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   name: 'rg-${organizationPrefix}-${sharedResourcesAbbreviation}-${environment}'
   location: location
@@ -67,3 +70,22 @@ module actionGroup 'modules/actiongroup.bicep' = {
     ]
   }
 }
+
+module appservicePlanScaling 'modules/appserviceplan-scaling.bicep' = if (settings.appservicePlan.scaling.enabled) {
+  name: '${deployment().name}-asp-scaling'
+  scope: sharedRg
+  params: {
+    location: location
+    environment: environment
+    organizationPrefix: organizationPrefix
+    sharedResourcesAbbreviation: sharedResourcesAbbreviation
+    appservicePlanName: sharedResources.outputs.appServicePlanName
+    applicationInsightsName: sharedResources.outputs.applicationInsightsName
+    actionGroupId: actionGroup.outputs.actionGroupId
+    scaling: settings.appservicePlan.scaling
+  }
+}
+
+// Used by the deployment workflow to deploy the scaling function. Empty when scaling is disabled.
+output scalingResourceGroupName string = sharedRg.name
+output scalingFunctionAppName string = appservicePlanScaling.?outputs.functionAppName ?? ''
