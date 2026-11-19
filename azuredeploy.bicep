@@ -76,5 +76,7 @@ module appservicePlanScaling 'modules/appserviceplan-scaling.bicep' = {
     environment: environment
     organizationPrefix: organizationPrefix
     sharedResourcesAbbreviation: sharedResourcesAbbreviation
+    appservicePlanName: sharedResources.outputs.appServicePlanName
+    applicationInsightsName: sharedResources.outputs.applicationInsightsName
   }
 }
